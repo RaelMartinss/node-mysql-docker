@@ -1,4 +1,4 @@
-version: '3.9'
+
 
 services:
 
@@ -17,7 +17,8 @@ services:
        condition: service_healthy
   app:
     build:
-      context: .
+      context: ./node
+      dockerfile: Dockerfile.prod
     container_name: app
     networks:
       - node-network
