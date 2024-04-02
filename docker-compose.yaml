@@ -26,8 +26,15 @@ services:
       - ./node:/usr/src/app
       - /app/node_modules
     tty: true
-    ports: 
-      - "3000:3000"
+    environment:
+      - PORT=3000
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=3306
+      - MYSQL_USER=root
+      - MYSQL_DATABASE=nodedb
+      - MYSQL_PASSWORD=root
+    # ports: 
+    #   - "3000:3000"
     healthcheck:
       test: ["CMD", "curl", "http://localhost:3000/"]
       interval: 5s
@@ -43,7 +50,8 @@ services:
     restart: always
     tty: true
     volumes: 
-      - ./mysql:/var/lib/mysql
+      - ./mysql/volumes/mysql/:/var/lib/mysql/
+      - ./mysql/start.sql:/docker-entrypoint-initdb.d/1.sql
     environment: 
       - MYSQL_DATABASE=nodedb
       - MYSQL_ROOT_PASSWORD=root
