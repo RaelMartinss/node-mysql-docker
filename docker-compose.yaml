@@ -1,16 +1,40 @@
-version: '3'
+version: '3.9'
 
 services:
 
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile.prod
+    container_name: nginx
+    tty: true
+    ports:
+      - 8080:80
+    networks:
+      - node-network
+    depends_on:
+      app:
+       condition: service_healthy
   app:
     build:
-      context: node
+      context: .
     container_name: app
     networks:
       - node-network
     volumes:
       - ./node:/usr/src/app
+      - /app/node_modules
     tty: true
+    ports: 
+      - "3000:3000"
+    healthcheck:
+      test: ["CMD", "curl", "http://localhost:3000/"]
+      interval: 5s
+      timeout: 30s
+      retries: 6
+    depends_on:
+      db:
+       condition: service_healthy
   db:
     image: mysql:5.7
     command: --innodb-use-native-aio=0
@@ -24,6 +48,11 @@ services:
       - MYSQL_ROOT_PASSWORD=root
     networks: 
       - node-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      interval: 5s
+      timeout: 10s
+      retries: 3
 
     
 
