@@ -4,6 +4,6 @@ WORKDIR /usr/src/app
 
 COPY . .
 
-EXPOSE 3000
+RUN npm i --omit=dev
 
-CMD ["node","index.js"]
+CMD ["npm", "start"]
