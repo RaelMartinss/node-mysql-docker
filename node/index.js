@@ -52,7 +52,7 @@ app.get('/', async (req,res) => {
     const randoName = uniqueNamesGenerator({ dictionaries: [names] });
     await createPerson(randoName)
     const people = await getPeople()
-    res.send('<h1>God of War!!!!</h1>' + makePeopleList(people))
+    res.send('<h1>Full Cycle Rocks!</h1>' + makePeopleList(people))
 })
 
 
